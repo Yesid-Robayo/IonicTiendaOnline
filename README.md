@@ -20,9 +20,4 @@ Esta aplicación es una tienda online desarrollada con tecnologías híbridas, u
 - Android Studio (para compilar para Android)
 - Xcode (para compilar para iOS, solo en macOS)
 
-## Instalación y ejecución
-
-### Backend
-
-1. Navegar al directorio del backend:
 
