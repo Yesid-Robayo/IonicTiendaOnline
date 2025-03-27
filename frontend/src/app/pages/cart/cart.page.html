@@ -1,0 +1,86 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Carrito de Compras</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="clearCart()" *ngIf="cartItems.length > 0">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="loadCart()">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-spinner *ngIf="isLoading" name="crescent" class="ion-margin-top ion-margin-bottom ion-text-center"></ion-spinner>
+
+  <div *ngIf="!isLoading && cartItems.length === 0" class="ion-padding ion-text-center">
+    <ion-icon name="cart-outline" size="large" color="medium"></ion-icon>
+    <h5>Tu carrito está vacío</h5>
+    <ion-button routerLink="/products" expand="block" fill="outline">
+      Explorar productos
+    </ion-button>
+  </div>
+
+  <div *ngIf="!isLoading && cartItems.length > 0">
+    <ion-list>
+      <ion-item-sliding *ngFor="let item of cartItems">
+        <ion-item>
+          <ion-thumbnail slot="start">
+            <img [src]="item.Product?.imageUrl" alt="{{ item.Product?.name }}">
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ item.Product?.name }}</h2>
+            <p>{{ item.Product?.price | currency }} x {{ item.quantity }}</p>
+            <p><strong>Subtotal: {{ (item.Product?.price ?? 0) * item.quantity | currency }}</strong></p>
+          </ion-label>
+          <div slot="end" class="quantity-controls">
+            <ion-button fill="clear" size="small" (click)="updateQuantity(item, item.quantity - 1)">
+              <ion-icon name="remove-circle"></ion-icon>
+            </ion-button>
+            <span>{{ item.quantity }}</span>
+            <ion-button fill="clear" size="small" (click)="updateQuantity(item, item.quantity + 1)">
+              <ion-icon name="add-circle"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="removeItem(item)">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+
+    <div class="ion-padding">
+      <div class="total-section">
+        <h2>Resumen del pedido</h2>
+        <div class="total-row">
+          <span>Subtotal</span>
+          <span>{{ total | currency }}</span>
+        </div>
+        <div class="total-row">
+          <span>Envío</span>
+          <span>Gratis</span>
+        </div>
+        <div class="total-row total">
+          <span>Total</span>
+          <span>{{ total | currency }}</span>
+        </div>
+      </div>
+
+      <ion-button expand="block" (click)="checkout()">
+        Finalizar compra
+      </ion-button>
+      <ion-button expand="block" fill="outline" routerLink="/products">
+        Seguir comprando
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+

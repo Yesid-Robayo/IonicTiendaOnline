@@ -1,0 +1,75 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title> Tienda Online </ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/cart">
+        <p style="color: white; margin-right: 5px;">Carrito</p>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="loadProducts()">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="ion-padding">
+    <ion-text color="dark">
+      <h1>Bienvenido a nuestra tienda</h1>
+      <p>Descubre nuestros productos destacados</p>
+    </ion-text>
+
+    <ion-spinner
+      *ngIf="isLoading"
+      name="crescent"
+      class="ion-margin-top ion-margin-bottom"
+    ></ion-spinner>
+
+    <ion-list *ngIf="!isLoading">
+      <ion-list-header>
+        <ion-label>Productos Destacados</ion-label>
+      </ion-list-header>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col
+            size="6"
+            size-md="3"
+            *ngFor="let product of featuredProducts"
+          >
+            <ion-card [routerLink]="['/product', product.id]">
+              <img [src]="product.imageUrl" alt="{{ product.name }}" />
+              <ion-card-header>
+                <ion-card-title class="ion-text-wrap"
+                  >{{ product.name }}</ion-card-title
+                >
+                <ion-card-subtitle
+                  >{{ product.price | currency }}</ion-card-subtitle
+                >
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-list-header>
+        <ion-label>Categorías</ion-label>
+      </ion-list-header>
+
+      <ion-item
+        *ngFor="let category of categories"
+        [routerLink]="['/products']"
+        [queryParams]="{category: category}"
+      >
+        <ion-label>{{ category }}</ion-label>
+        <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+      </ion-item>
+
+      <ion-item routerLink="/products">
+        <ion-label>Ver todos los productos</ion-label>
+        <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
